@@ -12,5 +12,5 @@ This dataset is a list of user behaviors, with columns: user-id, game-title, beh
 
 *Acknowledgements*
 
-This dataset is generated entirely from public Steam data, so we want to thank Steam for building such an awesome platform and community!
+This dataset is generated entirely from public Steam data, so we want to thank Steam for building such an awesome platform and community.
 
