@@ -27,13 +27,34 @@ def comparison_df(df,df_cleaned):
 def find_partial_duplicates(df,column_name,threshold=80):
     unique_values=df[column_name].unique()
     partial_duplicates={}
+    processed=set()
 
     for title in unique_values:
-        matches = process.extract(title, unique_values, scorer=fuzz.ratio, limit=5)
+        if title in processed:
+            continue
+
+        matches = process.extract(title, unique_values, scorer=fuzz.token_set_ratio, limit=7)
         similar_titles=[match[0] for match in matches if match[1]>= threshold and match[0]!=title]
 
 
         if similar_titles:
             partial_duplicates[title]=similar_titles
+            processed.update([title]+similar_titles)
 
     return partial_duplicates
+
+def standardize_titles_shortest(df,column_name,partial_duplicates):
+
+    title_map={}
+
+    for main_title,duplicates in partial_duplicates.items():
+        all_titles=[main_title]+duplicates
+
+        std_title=min(all_titles,key=len)
+
+        for title in all_titles:
+            title_map[title]=std_title
+
+    df.loc[:, column_name] = df[column_name].replace(title_map)
+
+    return df,title_map

@@ -4,7 +4,7 @@ from utils.read import read_file
 from utils.missing import miss_val_column
 from utils.missing import miss_val_percentage
 from utils.drop import drop_column
-from utils.duplicate import exact_duplicate_rows,num_exact_duplicates,drop_duplicate_rows,comparison_df,find_partial_duplicates
+from utils.duplicate import exact_duplicate_rows,num_exact_duplicates,drop_duplicate_rows,comparison_df,find_partial_duplicates,standardize_titles_shortest
 
 #loading the dataset
 df_steam=read_file('/Users/vandana/Desktop/steam-200k.csv')
@@ -51,5 +51,21 @@ with open("partial_duplicates.txt", "w") as f:
     for key, values in partial_dups.items():
         f.write(f"{key}: {', '.join(values)}\n")
 
+df_cleaned,title_mapping = standardize_titles_shortest(df_cleaned,'game-title',partial_dups)
 
-#print(partial_dups)
+'''for old_title,new_title in title_mapping.items():
+    print(f'{old_title}, {new_title}\n')'''
+
+with open("title_mapping.txt", "w") as f:
+    for old_title, new_title in title_mapping.items():
+        f.write(f"{old_title}, {new_title}\n")
+
+print("Unique game titles before:", df['game-title'].nunique())
+print("Unique game titles after:", df_cleaned['game-title'].nunique())
+
+print(df.head(15))
+print('\n')
+print(df_cleaned.head(15))
+
+
+
