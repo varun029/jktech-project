@@ -5,6 +5,9 @@ from utils.missing import miss_val_column
 from utils.missing import miss_val_percentage
 from utils.drop import drop_column
 from utils.duplicate import exact_duplicate_rows,num_exact_duplicates,drop_duplicate_rows,comparison_df,find_partial_duplicates,standardize_titles_shortest
+from utils.normalize import normalize_numeric,normalize_text,normalize_robust
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 #loading the dataset
 df_steam=read_file('/Users/vandana/Desktop/steam-200k.csv')
@@ -63,9 +66,38 @@ with open("title_mapping.txt", "w") as f:
 print("Unique game titles before:", df['game-title'].nunique())
 print("Unique game titles after:", df_cleaned['game-title'].nunique())
 
-print(df.head(15))
+df_cleaned=normalize_text(df_cleaned,'game-title')
+df_cleaned=normalize_text(df_cleaned,'behavior')
+df_cleaned=normalize_numeric(df_cleaned,'value')
+df_cleaned=normalize_numeric(df_cleaned,'user_id')
+
+
+
+'''plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+sns.histplot(df_cleaned['value'], bins=50, kde=True, color='blue')
+plt.title("Before Normalization")
+plt.xlabel("Value")
+plt.ylabel("Frequency")'''
+
+#df_scaled=normalize_robust(df_cleaned,'value')
+
+'''plt.subplot(1, 2, 2)
+sns.histplot(df_scaled['value'], bins=50, kde=True, color='green')  # Use df_scaled here
+plt.title("After Robust Normalization")
+plt.xlabel("Scaled Value")
+plt.ylabel("Frequency")'''
+
+
+print(df.head(15))  # Check first few rows
 print('\n')
-print(df_cleaned.head(15))
-
-
+print(df_cleaned.head(15))  # Check first few rows
+print('\n')
+print(df.info())  # Verify data types
+print('\n')
+print(df_cleaned.info())  # Verify data types
+print('\n')
+print(df.nunique())  # Ensure normalization worked
+print('\n')
+print(df_cleaned.nunique())  # Ensure normalization worked
 
