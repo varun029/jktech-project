@@ -5,10 +5,7 @@ from utils.missing import miss_val_column
 from utils.missing import miss_val_percentage
 from utils.drop import drop_column
 from utils.duplicate import exact_duplicate_rows,num_exact_duplicates,drop_duplicate_rows,comparison_df,find_partial_duplicates,standardize_titles_shortest
-from utils.normalize import normalize_numeric,normalize_text,normalize_robust,normalize_log
-from utils.outliers import remove_outliers
-import matplotlib.pyplot as plt
-import seaborn as sns
+from utils.normalize import normalize_numeric,normalize_text
 
 #loading the dataset
 df_steam=read_file('/Users/vandana/Desktop/steam-200k.csv')
@@ -51,18 +48,7 @@ with open("game_titles.txt", "w") as f:
 
 partial_dups=find_partial_duplicates(df,'game-title',threshold=80)
 
-with open("partial_duplicates.txt", "w") as f:
-    for key, values in partial_dups.items():
-        f.write(f"{key}: {', '.join(values)}\n")
-
 df_cleaned,title_mapping = standardize_titles_shortest(df_cleaned,'game-title',partial_dups)
-
-'''for old_title,new_title in title_mapping.items():
-    print(f'{old_title}, {new_title}\n')'''
-
-with open("title_mapping.txt", "w") as f:
-    for old_title, new_title in title_mapping.items():
-        f.write(f"{old_title}, {new_title}\n")
 
 print("Unique game titles before:", df['game-title'].nunique())
 print("Unique game titles after:", df_cleaned['game-title'].nunique())
@@ -84,25 +70,4 @@ print(df.nunique())
 print('\n')
 print(df_cleaned.nunique()) 
 
-
-'''df_cleaned=remove_outliers(df_cleaned,'value')
-
-plt.figure(figsize=(12, 5))
-sns.histplot(df_cleaned['value'], bins=50, kde=True, color='blue')
-plt.title("Before Normalization")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-plt.show()'''
-
-
-'''df_scaled=normalize_log(df_cleaned,'value')
-df_scaled=normalize_robust(df_scaled,'value')
-
-plt.subplot(1, 2, 2)
-sns.histplot(df_scaled['value'], bins=50, kde=True, color='green')
-plt.title("After Log + Robust Normalization")
-plt.xlabel("Scaled Value")
-plt.ylabel("Frequency")
-plt.show()'''
-
-
+df_cleaned.to_csv("/Users/vandana/Desktop/cleaned_data.csv", index=False)

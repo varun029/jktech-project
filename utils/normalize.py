@@ -11,12 +11,3 @@ def normalize_text(df,column_name):
 def normalize_numeric(df,column_name):
     df[column_name]=pd.to_numeric(df[column_name],errors='coerce')
     return df
-
-def normalize_robust(df,column_name):
-    scaler=RobustScaler()
-    df[column_name]=scaler.fit_transform(df[[column_name]])
-    return df   
-
-def normalize_log(df,column_name):
-    df[column_name]=np.log1p(df[column_name])
-    return df
